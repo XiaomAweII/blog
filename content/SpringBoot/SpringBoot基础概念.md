@@ -193,4 +193,5 @@ public String greet(@RequestParam(value = "name", defaultValue = "World") String
 
 观察下控制台啊, 现在我们什么都没有, 就写了我们的业务, 一个引导类, 一个Controller业务,没了, 但是是不是看到了控制台帮我们启动了一个Tomcat, 我们打开浏览器运行, 访问http://localhost:8080/hello , 是不是看到了"你好,SpringBoot!"的消息
 
+上一节[[SpringBoot/index|SpringBoot学习日记]]
 下一节[[SpringBoot/SpringBoot核心功能|SpringBoot核心功能]]
