@@ -270,10 +270,12 @@ public class Test {
 ```
 
 输出结果
+
 ```
 Parent static block
 Child static block
 ```
+
 子类初始化前，父类会先被初始化
 
 ## 总结
@@ -285,3 +287,182 @@ Child static block
 5. 类的初始化是懒惰的，只有在首次使用时才会被初始化。
 6. 子类初始化前，父类会先被初始化。
 
+# 类加载器
+
+## 什么是类加载器?
+
+类加载器（ClassLoader）是Java虚拟机提供的一种机制，用于加载类和接口的字节码数据。它在类的生命周期中扮演着重要角色，主要负责加载阶段的工作。
+
+```mermaid
+graph TD
+    A[类加载器] -->|加载| B[获取字节码]
+    B --> C[生成方法区对象]
+    C --> D[生成堆上Class对象]
+    A -->|来源| E[本地文件]
+    A -->|来源| F[网络传输]
+    A -->|来源| G[动态代理生成]
+```
+
+## 类加载器的分类
+
+在 JDK 8 及之前的版本中, 主要有以下几种类加载器:
+
+1. 启动类加载器（Bootstrap ClassLoader）
+2. 扩展类加载器（Extension ClassLoader）
+3. 应用程序类加载器（Application ClassLoader）
+4. 自定义类加载器
+
+```java
+graph TD
+    A[启动类加载器] --> B[扩展类加载器]
+    B --> C[应用程序类加载器]
+    C --> D[自定义类加载器]
+```
+
+### 启动类加载器（Bootstrap ClassLoader）
+
+- 由C++实现, 是虚拟机的一部分
+- 负责加载Java的核心类库, 如rt.jar、resources.jar等
+- 没有父类加载器
+- 加载扩展类加载器和应用程序类加载器
+
+### 扩展类加载器（Extension ClassLoader）
+
+- 由Java实现，sun.misc.Launcher$ExtClassLoader
+- 负责加载\lib\ext目录下或者由系统变量-Djava.ext.dirs指定位置中的类库
+
+### 应用程序类加载器（Application ClassLoader）
+
+- 由Java实现，sun.misc.Launcher$AppClassLoader
+- 负责加载用户类路径（ClassPath）上所指定的类库
+
+### 自定义类加载器
+
+- 继承自java.lang.ClassLoader
+- 通常重写findClass()方法
+
+## 双亲委派机制
+双亲委派机制是Java类加载器的一个重要特性，它维护了类加载的层次结构，保证了Java核心库的安全性。
+
+工作流程：
+1. 当一个类加载器收到类加载请求时，它首先将这个请求委派给父类加载器。
+2. 每个父类加载器都会重复这个过程，直到请求到达顶层的启动类加载器。
+3. 如果父类加载器无法完成加载任务，子类加载器才会尝试自己加载。
+
+```mermaid
+sequenceDiagram
+    participant App as 应用程序类加载器
+    participant Ext as 扩展类加载器
+    participant Boot as 启动类加载器
+    App->>Ext: 委派加载请求
+    Ext->>Boot: 委派加载请求
+    Boot-->>Ext: 无法加载，向下传递
+    Ext-->>App: 无法加载，向下传递
+    App->>App: 尝试自己加载
+```
+
+## 打破双亲委派机制
+
+有时候，我们需要打破双亲委派机制来实现一些特殊的需求。以下是三种常见的方式：
+
+1. 自定义类加载器
+2. 使用线程上下文类加载器
+3. OSGi等模块化框架
+
+## 案例: 自定义类加载器
+
+假设我们需要实现一个加密类加载器，用于加载加密的class文件：
+
+```java
+public class EncryptedClassLoader extends ClassLoader {
+    private String classDir;
+
+    public EncryptedClassLoader(String classDir, ClassLoader parent) {
+        super(parent);
+        this.classDir = classDir;
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        try {
+            byte[] classData = getEncryptedClassData(name);
+            if (classData == null) {
+                throw new ClassNotFoundException();
+            }
+            return defineClass(name, classData, 0, classData.length);
+        } catch (IOException e) {
+            throw new ClassNotFoundException("Could not load encrypted class", e);
+        }
+    }
+
+    private byte[] getEncryptedClassData(String className) throws IOException {
+        String path = classDir + File.separatorChar
+                + className.replace('.', File.separatorChar) + ".class";
+        try (InputStream ins = new FileInputStream(path);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            int bufferSize = 4096;
+            byte[] buffer = new byte[bufferSize];
+            int bytesNumRead;
+            while ((bytesNumRead = ins.read(buffer)) != -1) {
+                baos.write(buffer, 0, bytesNumRead);
+            }
+            byte[] encryptedClassBytes = baos.toByteArray();
+            return decrypt(encryptedClassBytes);  // 实现解密方法
+        }
+    }
+
+    private byte[] decrypt(byte[] encryptedClassBytes) {
+        // 实现解密逻辑
+        return encryptedClassBytes;
+    }
+}
+```
+
+## 案例: 线程上下文类加载器
+
+JDBC是一个典型的使用线程上下文类加载器的例子。以下是一个简化的示例：
+
+```java
+public class JDBCExample {
+    public static void main(String[] args) throws Exception {
+        // 保存当前线程的上下文类加载器
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            // 设置新的上下文类加载器
+            Thread.currentThread().setContextClassLoader(JDBCExample.class.getClassLoader());
+            
+            // 加载JDBC驱动
+            Class.forName("com.mysql.jdbc.Driver");
+            
+            // 使用JDBC进行数据库操作
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "user", "password");
+            // 执行SQL操作...
+            conn.close();
+        } finally {
+            // 恢复原来的上下文类加载器
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+        }
+    }
+}
+```
+
+## JDK 9之后的变化
+
+JDK 9引入了模块系统，类加载器的结构也发生了变化：
+
+1. 启动类加载器改用Java实现
+2. 扩展类加载器被平台类加载器（Platform Class Loader）取代
+
+```mermaid
+graph TD
+    A[启动类加载器] --> B[平台类加载器]
+    B --> C[应用程序类加载器]
+    C --> D[自定义类加载器]
+```
+
+## 总结
+1. 类加载器的主要作用是加载类的字节码到JVM中
+2. Java默认提供了启动类加载器、扩展类加载器（JDK 9后为平台类加载器）和应用程序类加载器。
+3. 双亲委派机制保证了类加载的安全性和唯一性。
+4. 在某些场景下，我们需要打破双亲委派机制，比如SPI机制、模块化开发等。
+5. 了解类加载器的工作原理对于解决类加载相关问题、实现自定义类加载等场景非常重要。
