@@ -1,10 +1,8 @@
 ---
-
 title: Spring Boot 学习日记
-tags: 
-    - Spring Boot 
-    - 学习日记
-
+tags:
+  - Spring Boot
+  - 学习日记
 ---
 
 # SpringBoot 学习专栏
@@ -13,5 +11,7 @@ tags:
 
 [[SpringBoot/SpringBoot基础概念|(一)SpringBoot基础概念]]
 [[SpringBoot/SpringBoot核心功能|(二)SpringBoot核心功能]]
+[[SpringBoot/SpringBoot测试支持|(三)SpringBoot测试支持]]
+[[SpringBoot/SpringBoot数据访问|(四)SpringBoot测试支持]]
 
 
