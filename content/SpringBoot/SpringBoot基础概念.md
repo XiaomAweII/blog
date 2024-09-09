@@ -27,7 +27,7 @@ SpringBoot 是一个基于 Spring 框架的快速开发工具。它的主要作�
 - 命令行界面: SpringBoot提供命令行工具, 可以快速运行和测试SpringBoot应用
 - Actuator: 提供在运行时检视应用内部情况的能力
 
-## SpringBoot和创痛SpringBoot框架的区别
+## SpringBoot和传统SpringBoot框架的区别
 
 - 配置简化: Spring Boot 大量使用注解,减少 XML 配置
 - 内嵌服务器：不需要外部的 Web 服务器
