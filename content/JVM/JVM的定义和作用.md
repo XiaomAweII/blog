@@ -46,7 +46,7 @@ graph TD
 
 类加载是JVM将类的字节码加载到内存, 并对数据进行校验, 转换解析和初始化, 最终形成JVM可以直接使用的Java类型的过程
 
-```meimaid
+```mermaid
 graph LR
     A[加载] --> B[连接]
     B --> C[验证]
