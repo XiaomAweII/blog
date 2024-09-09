@@ -352,4 +352,130 @@ SpringBoot帮我们提供了快速配置不同环境的配置, 我们在实际�
 spring.profiles.active=dev
 ```
 
+## Actuator(执行器)
+
+SpringBoot Actuator为SpringBoot应用提供了生产级别的监控和管理能力. Actuator 可以帮助我们了解应用程序的内部运作, 并在不修改代码的情况下与应用程序进行交互
+
+### 主要特点
+
+1. 健康检查: 提供应用程序各组件的健康状态。
+2. 指标首届: 收集应用程序的各种运行时指标。
+3. 审计: 跟踪 HTTP 请求和重要的应用程序事件。
+4. HTTP跟踪: 提供最近的 HTTP 请求的详细信息。
+5. 环境信息: 显示当前的环境属性。
+6. 线程转储: 提供应用程序线程的详细信息。
+7. 内存转储: 允许进行堆内存转储
+
+要使用Actuator, 首先要添加依赖:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+添加依赖后, Actuator 会自动配置一些端点，如 /actuator/health、/actuator/info 等
+
+举个🌰:
+
+1. 健康检查端点
+   访问 http://localhost:8080/actuator/health, 可能会看到类似以下的响应:
+
+```json
+{
+  "status": "UP"
+}
+```
+
+这表示当前应用程序正在运行且健康。
+
+2. 应用信息端点
+   访问 http://localhost:8080/actuator/info，如果在 application.properties 或 application.yml 中配置了信息，会显示出来
+
+```yaml
+info:
+  app:
+    name: MyApp
+    description: My Spring Boot Application
+    version: 1.0.0
+```
+
+3. 指标端点
+   访问 http://localhost:8080/actuator/metrics，会看到可用的指标列表。
+   要查看特定指标，例如 HTTP 请求数，可以访问：
+   http://localhost:8080/actuator/metrics/http.server.requests
+
+4. 环境端点
+   访问http://localhost:8080/actuator/env可以看到应用的环境配置信息。
+
+5. 日志级别端点
+   可以通过 POST 请求动态修改日志级别
+
+```
+POST http://localhost:8080/actuator/loggers/org.springframework.web
+Content-Type: application/json
+
+{
+  "configuredLevel": "DEBUG"
+}
+```
+
+这会将 org.springframework.web 包的日志级别设置为 DEBUG
+
+注意：出于安全考虑，默认情况下只有 /health 和 /info 端点是公开的。要暴露更多端点,需要在配置文件中添加：
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+## 嵌入式服务器支持
+
+我们启动了这么多次SpringBoot是不是早就发现了我们从来没有配置过Tomcat呀? 这是因为SpringBoot提供了对嵌入式服务器的支持, 默认情况下, 当我们创建一个SpringBoot Web应用时, 它会包含一个嵌入式的Tomcat服务器, 这意味着, 我们可以将应用程序打包成一个可执行的JAR包, 其中包含了所有必要的依赖, 包括web服务器
+
+### 主要特点
+
+1. 无需部署war文件: 可以直接运行jar文件来启动应用
+2. 易于配置: 可以通过application.properties 或 application.yml 文件轻松配置服务器。
+3. 灵活切换: 可以轻松切换到其他服务器, 如Jetty或Undertow
+   > 回头我会单独写一个服务器篇, 我之前有看过别人介绍Tomcat启动原理, 在其中也介绍了以下Jetty和Undertow, 不是很重要, 先挖个坑, 我怎么天天挖坑
+
+举个🌰:
+在application.properties 文件中:
+
+```properties
+server.port=8080
+server.servlet.context-path=/myapp
+```
+
+切换到Jetty:
+首先, 排除Tomcat依赖并添加Jetty
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency>
+```
+这个特性帮我们简化了Spring应用的部署和运行过程, 是SpringBoot的一个重要核心功能
+
+>黑马的连接我放这里【黑马程序员SpringBoot教程，6小时快速入门Java微服务架构Spring Boot】 https://www.bilibili.com/video/BV1Lq4y1J77x/?share_source=copy_web&vd_source=c3f11670c018bfa92ad847e8e0f84309
+>然后其中视频还讲了整合JUnit测试,MyBatis还有Redis,那就是两部分一个是测试,一个是数据访问,同时, 我之前被问到好多次都是问到SpringBoot都是自动配置, 起步依赖就问到一次, 所以自动配置单独写一遍吧, 这样不用来回跳转章节看其中的自动配置部分, 起步依赖写到自动配置那一章, 之后就是区别了, 区别我只能从网上找点了, 因为我是纯背了背区别, 再之后就是项目了, 我也是跟着别人做的项目, 自己没有那么大本事, 还是小趴菜一只, github上有源码, 回头跑一遍过一遍, 大佬的知识星球回头发达了再给他们补票吧, 一个课一两千块钱, 学生党的我们不是很能消费的起了, 哦哦, 项目是一个电商一个仿12306, 练习练手的话推荐一个B站up程序员青戈,他的主页有他自己的网站, 上边全是SpringBoot3+Vue3的项目, 简单易学, 基本上两三天起一个两三天起一个, 还能每天白嫖
+
+
 上一节[[SpringBoot/SpringBoot基础概念|SpringBoot基础概念]]
+下一节[[SpringBoot/SpringBoot测试支持|SpringBoot测试支持]]
