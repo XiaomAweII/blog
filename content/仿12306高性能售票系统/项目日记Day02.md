@@ -462,13 +462,23 @@ graph TD
     B[Admin 管理端]
     end
 
-    subgraph 后端服务
+    subgraph 网关
     C[Gateway 网关模块]
+    end
+
+    A --> C
+    B --> C
+
+    C --> D[Business 业务模块]
+    C --> E[Member 会员模块]
+    C --> F[Batch 跑批模块]
+```
+```mermaid
+graph TD
+    subgraph 后端核心服务
     D[Business 业务模块]
     E[Member 会员模块]
     F[Batch 跑批模块]
-    G[Common 公共模块]
-    H[Generator 代码生成器]
     end
 
     subgraph 数据存储
@@ -477,6 +487,32 @@ graph TD
     K[(Batch DB)]
     end
 
+    D --> I
+    E --> J
+    F --> K
+```
+```mermaid
+graph TD
+    subgraph 支持模块
+    G[Common 公共模块]
+    H[Generator 代码生成器]
+    end
+
+    subgraph 后端核心服务
+    D[Business 业务模块]
+    E[Member 会员模块]
+    F[Batch 跑批模块]
+    end
+
+    D -.-> G
+    E -.-> G
+    F -.-> G
+    H -.-> D
+    H -.-> E
+    H -.-> F
+```
+```mermaid
+graph TD
     subgraph 第三方服务
     L[Redis]
     M[RocketMQ]
@@ -485,33 +521,18 @@ graph TD
     P[Sentinel]
     end
 
-    A --> C
-    B --> C
-    C --> D
-    C --> E
-    C --> F
-    D --> I
-    E --> J
-    F --> K
-    D -.-> G
-    E -.-> G
-    F -.-> G
-    H -.-> D
-    H -.-> E
-    H -.-> F
-    D <--> L
-    D <--> M
-    D <--> N
-    D <--> O
-    D <--> P
-    E <--> L
-    E <--> M
-    E <--> N
-    E <--> O
-    E <--> P
-    F <--> N
-    F <--> O
+    subgraph 后端核心服务
+    D[Business 业务模块]
+    E[Member 会员模块]
+    F[Batch 跑批模块]
+    end
+
+    D <--> L & M & N & O & P
+    E <--> L & M & N & O & P
+    F <--> N & O
 ```
+
+
 
 ### 架构特点
 
