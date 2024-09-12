@@ -398,7 +398,6 @@ $\overline{v}=\bar{v}\quad\underline{v}$
 
 :smile: :heart: :thumbsup:
 
-
 ## 十九、目录生成
 
 许多Markdown编辑器支持自动生成目录，通常使用 [TOC] 标记：
@@ -436,3 +435,262 @@ $$
 \end{aligned}
 $$
 
+## 二十一、方程组
+
+可以使用 \begin{array} 或 \begin{cases} 来创建方程组：
+
+```txt
+$$
+\left\{
+\begin{array}{l}
+a_1x+b_1y+c_1z=d_1\\
+a_2x+b_2y+c_2z=d_2\\
+a_3x+b_3y+c_3z=d_3
+\end{array}
+\right.
+$$
+
+或者
+
+$$
+\begin{cases}
+a_1x+b_1y+c_1z=d_1\\
+a_2x+b_2y+c_2z=d_2\\
+a_3x+b_3y+c_3z=d_3
+\end{cases}
+$$
+```
+
+$$
+\left\{
+\begin{array}{l}
+a_1x+b_1y+c_1z=d_1\\
+a_2x+b_2y+c_2z=d_2\\
+a_3x+b_3y+c_3z=d_3
+\end{array}
+\right.
+$$
+
+$$
+\begin{cases}
+a_1x+b_1y+c_1z=d_1\\
+a_2x+b_2y+c_2z=d_2\\
+a_3x+b_3y+c_3z=d_3
+\end{cases}
+$$
+
+## 二十二、连分式
+
+使用 \cfrac 来创建连分式：
+
+```txt
+$$
+x=a_0+\cfrac{1^2}{a_1+\cfrac{2^2}{a_2+\cfrac{3^2}{a_3+\cfrac{4^2}{a_4+\cdots}}}}
+$$
+```
+
+效果：
+
+$$
+x=a_0+\cfrac{1^2}{a_1+\cfrac{2^2}{a_2+\cfrac{3^2}{a_3+\cfrac{4^2}{a_4+\cdots}}}}
+$$
+
+## 二十三、交换图表
+
+使用 AMScd 包来创建交换图表：
+
+```txt
+$$
+\require{AMScd}
+\begin{CD}
+A@>a>>B\\
+@VbVV\# @VcVV\\
+C @>>d> D
+\end{CD}
+$$
+```
+
+效果：
+
+$$
+\require{AMScd}
+\begin{CD}
+A@>a>>B\\
+@VbVV\# @VcVV\\
+C @>>d> D
+\end{CD}
+$$
+
+## 二十四、矩阵
+
+使用 \begin{matrix}, \begin{pmatrix}, \begin{bmatrix}, \begin{Bmatrix}, \begin{vmatrix} 或 \begin{Vmatrix} 来创建不同样式的矩阵：
+
+```txt
+$$
+\begin{pmatrix}
+a & b\\
+c & d
+\end{pmatrix}
+\quad
+\begin{bmatrix}
+a & b\\
+c & d
+\end{bmatrix}
+\quad
+\begin{Bmatrix}
+a & b\\
+c & d
+\end{Bmatrix}
+\quad
+\begin{vmatrix}
+a & b\\
+c & d
+\end{vmatrix}
+\quad
+\begin{Vmatrix}
+a & b\\
+c & d
+\end{Vmatrix}
+$$
+```
+
+效果：
+
+$$
+\begin{pmatrix}
+a & b\\
+c & d
+\end{pmatrix}
+\quad
+\begin{bmatrix}
+a & b\\
+c & d
+\end{bmatrix}
+\quad
+\begin{Bmatrix}
+a & b\\
+c & d
+\end{Bmatrix}
+\quad
+\begin{vmatrix}
+a & b\\
+c & d
+\end{vmatrix}
+\quad
+\begin{Vmatrix}
+a & b\\
+c & d
+\end{Vmatrix}
+$$
+
+## 二十五、颜色
+
+在一些Markdown渲染器中，可以使用HTML的颜色语法：
+
+```txt
+<font color="red">这是红色文字</font>
+<font color="#00FF00">这是绿色文字</font>
+```
+
+效果：
+<font color="red">这是红色文字</font>
+<font color="#00FF00">这是绿色文字</font>
+
+在LaTeX公式中，可以使用 \color 命令：
+
+```txt
+$$
+\color{red}{x^2} + \color{blue}{y^2} = \color{green}{z^2}
+$$
+```
+
+效果：
+
+$$
+\color{red}{x^2} + \color{blue}{y^2} = \color{green}{z^2}
+$$
+
+## 二十六、希腊字母
+
+在数学公式中，可以使用反斜杠加上希腊字母的英文名来输入希腊字母：
+| 语法 | 显示 | 语法 | 显示 | 语法 | 显示 |
+|------|------|------|------|------|------|
+| \Alpha(\alpha) | $\Alpha(\alpha)$ | \Beta(\beta) | $\Beta(\beta)$ | \Gamma(\gamma) | $\Gamma(\gamma)$ |
+| \Delta(\delta) | $\Delta(\delta)$ | \Epsilon(\epsilon) | $\Epsilon(\epsilon)$ | \Zeta(\zeta) | $\Zeta(\zeta)$ |
+| \Eta(\eta) | $\Eta(\eta)$ | \Theta(\theta) | $\Theta(\theta)$ | \Iota(\iota) | $\Iota(\iota)$ |
+| \Kappa(\kappa) | $\Kappa(\kappa)$ | \Lambda(\lambda) | $\Lambda(\lambda)$ | \Mu(\mu) | $\Mu(\mu)$ |
+| \Nu(\nu) | $\Nu(\nu)$ | \Xi(\xi) | $\Xi(\xi)$ | \Omicron(\omicron) | $\Omicron(\omicron)$ |
+| \Pi(\pi) | $\Pi(\pi)$ | \Rho(\rho) | $\Rho(\rho)$ | \Sigma(\sigma) | $\Sigma(\sigma)$ |
+| \Tau(\tau) | $\Tau(\tau)$ | \Upsilon(\upsilon) | $\Upsilon(\upsilon)$ | \Phi(\phi) | $\Phi(\phi)$ |
+| \Chi(\chi) | $\Chi(\chi)$ | \Psi(\psi) | $\Psi(\psi)$ | \Omega(\omega) | $\Omega(\omega)$ |
+
+## 二十七、特殊符号
+
+### 关系运算符
+
+| 输入       | 显示         | 输入      | 显示        | 输入     | 显示       |
+| ---------- | ------------ | --------- | ----------- | -------- | ---------- |
+| \pm        | $\pm$        | \times    | $\times$    | \div     | $\div$     |
+| \mid       | $\mid$       | \nmid     | $\nmid$     | \cdot    | $\cdot$    |
+| \circ      | $\circ$      | \ast      | $\ast$      | \bigodot | $\bigodot$ |
+| \bigotimes | $\bigotimes$ | \bigoplus | $\bigoplus$ | \leq     | $\leq$     |
+| \geq       | $\geq$       | \neq      | $\neq$      | \approx  | $\approx$  |
+| \equiv     | $\equiv$     | \sum      | $\sum$      | \prod    | $\prod$    |
+| \coprod    | $\coprod$    |           |             |          |            |
+
+### 集合运算符
+
+| 输入      | 显示        | 输入      | 显示        | 输入      | 显示        |
+| --------- | ----------- | --------- | ----------- | --------- | ----------- |
+| \emptyset | $\emptyset$ | \in       | $\in$       | \notin    | $\notin$    |
+| \subset   | $\subset$   | \supset   | $\supset$   | \subseteq | $\subseteq$ |
+| \supseteq | $\supseteq$ | \bigcap   | $\bigcap$   | \bigcup   | $\bigcup$   |
+| \bigvee   | $\bigvee$   | \bigwedge | $\bigwedge$ | \biguplus | $\biguplus$ |
+
+### 对数运算符
+
+| 输入 | 显示   | 输入 | 显示  | 输入 | 显示  |
+| ---- | ------ | ---- | ----- | ---- | ----- |
+| \log | $\log$ | \lg  | $\lg$ | \ln  | $\ln$ |
+
+### 三角运算符
+
+| 输入 | 显示   | 输入   | 显示     | 输入 | 显示   |
+| ---- | ------ | ------ | -------- | ---- | ------ |
+| \bot | $\bot$ | \angle | $\angle$ | \sin | $\sin$ |
+| \cos | $\cos$ | \tan   | $\tan$   | \cot | $\cot$ |
+| \sec | $\sec$ | \csc   | $\csc$   |      |        |
+
+### 微积分运算符
+
+| 输入    | 显示      | 输入   | 显示     | 输入       | 显示         |
+| ------- | --------- | ------ | -------- | ---------- | ------------ |
+| \int    | $\int$    | \iint  | $\iint$  | \iiint     | $\iiint$     |
+| \iiiint | $\iiiint$ | \oint  | $\oint$  | \lim       | $\lim$       |
+| \infty  | $\infty$  | \nabla | $\nabla$ | \mathrm{d} | $\mathrm{d}$ |
+
+### 逻辑运算符
+
+| 输入        | 显示          | 输入       | 显示         | 输入  | 显示    |
+| ----------- | ------------- | ---------- | ------------ | ----- | ------- |
+| \because    | $\because$    | \therefore | $\therefore$ |       |         |
+| \forall     | $\forall$     | \exists    | $\exists$    |       |         |
+| \not\subset | $\not\subset$ | \not<      | $\not<$      | \not> | $\not>$ |
+| \not=       | $\not=$       |            |              |       |         |
+
+## 二十八、字体
+
+在数学公式中可以使用不同的字体：
+
+| 输入  | 说明       | 显示            |
+| ----- | ---------- | --------------- |
+| \rm   | 罗马体     | $\rm{Sample}$   |
+| \it   | 意大利体   | $\it{Sample}$   |
+| \bf   | 粗体       | $\bf{Sample}$   |
+| \sf   | 等线体     | $\sf{Sample}$   |
+| \tt   | 打字机体   | $\tt{Sample}$   |
+| \frak | 旧德式字体 | $\frak{Sample}$ |
+| \cal  | 花体       | $\cal{Sample}$  |
+| \Bbb  | 黑板粗体   | $\Bbb{Sample}$  |
+| \mit  | 数学斜体   | $\mit{Sample}$  |
+| \scr  | 手写体     | $\scr{Sample}$  |
