@@ -256,13 +256,13 @@ Markdown支持部分HTML元素，如：
 
 ```txt
 $x^{y^z}=(1+e^x)^{-2xy^w}$
-$\sideset{^1_2}{^3_4}{\underset{6}\bigotimes}$
+${}_1^2\bigotimes_4^3\underset{6}{\bigotimes}$
 ```
 
 效果:
 
 $x^{y^z}=(1+e^x)^{-2xy^w}$
-$\sideset{^1_2}{^3_4}{\underset{6}\bigotimes}$
+${}_1^2\bigotimes_4^3\underset{6}{\bigotimes}$
 
 ### 2. 括号和分隔符
 
@@ -503,8 +503,8 @@ $$
 $$
 \require{AMScd}
 \begin{CD}
-A@>a>>B\\
-@VbVV\# @VcVV\\
+A @>a>> B\\
+@VbVV @VcVV\\
 C @>>d> D
 \end{CD}
 $$
@@ -515,8 +515,8 @@ $$
 $$
 \require{AMScd}
 \begin{CD}
-A@>a>>B\\
-@VbVV\# @VcVV\\
+A @>a>> B\\
+@VbVV @VcVV\\
 C @>>d> D
 \end{CD}
 $$
@@ -663,11 +663,11 @@ $$
 
 ### 微积分运算符
 
-| 输入    | 显示      | 输入   | 显示     | 输入       | 显示         |
-| ------- | --------- | ------ | -------- | ---------- | ------------ |
-| \int    | $\int$    | \iint  | $\iint$  | \iiint     | $\iiint$     |
-| \iiiint | $\iiiint$ | \oint  | $\oint$  | \lim       | $\lim$       |
-| \infty  | $\infty$  | \nabla | $\nabla$ | \mathrm{d} | $\mathrm{d}$ |
+| 输入   | 显示     | 输入   | 显示     | 输入       | 显示         |
+| ------ | -------- | ------ | -------- | ---------- | ------------ |
+| \int   | $\int$   | \iint  | $\iint$  | \iiint     | $\iiint$     |
+| \oint  | $\oint$  | \lim   | $\lim$   | \infty     | $\infty$     |
+| \infty | $\infty$ | \nabla | $\nabla$ | \mathrm{d} | $\mathrm{d}$ |
 
 ### 逻辑运算符
 
@@ -682,15 +682,15 @@ $$
 
 在数学公式中可以使用不同的字体：
 
-| 输入  | 说明       | 显示            |
-| ----- | ---------- | --------------- |
-| \rm   | 罗马体     | $\rm{Sample}$   |
-| \it   | 意大利体   | $\it{Sample}$   |
-| \bf   | 粗体       | $\bf{Sample}$   |
-| \sf   | 等线体     | $\sf{Sample}$   |
-| \tt   | 打字机体   | $\tt{Sample}$   |
-| \frak | 旧德式字体 | $\frak{Sample}$ |
-| \cal  | 花体       | $\cal{Sample}$  |
-| \Bbb  | 黑板粗体   | $\Bbb{Sample}$  |
-| \mit  | 数学斜体   | $\mit{Sample}$  |
-| \scr  | 手写体     | $\scr{Sample}$  |
+| 输入      | 说明     | 显示                |
+| --------- | -------- | ------------------- |
+| \rm       | 罗马体   | $\rm{Sample}$       |
+| \it       | 意大利体 | $\it{Sample}$       |
+| \bf       | 粗体     | $\bf{Sample}$       |
+| \sf       | 等线体   | $\sf{Sample}$       |
+| \tt       | 打字机体 | $\tt{Sample}$       |
+| \mathfrak | 哥特体   | $\mathfrak{Sample}$ |
+| \mathcal  | 花体     | $\mathcal{Sample}$  |
+| \mathbb   | 黑板粗体 | $\mathbb{Sample}$   |
+| \mathrm   | 正体     | $\mathrm{Sample}$   |
+| \mathit   | 数学斜体 | $\mathit{Sample}$   |
