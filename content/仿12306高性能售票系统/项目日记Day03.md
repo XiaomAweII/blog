@@ -1063,25 +1063,28 @@ graph LR
 ```
 
 2. 小体积：
-    - 不需要完整的 JDK（可能 200MB+）
-    - 生成的可执行文件较小（几十 MB）
+
+   - 不需要完整的 JDK（可能 200MB+）
+   - 生成的可执行文件较小（几十 MB）
 
 3. 云原生友好：
-    - 快速扩展：可以在短时间内启动多个实例
-    - 资源效率：占用更少的系统资源
+   - 快速扩展：可以在短时间内启动多个实例
+   - 资源效率：占用更少的系统资源
 
 #### AOT 的缺点
 
 1. 不支持跨平台：
-    - 为 Windows 编译的程序无法在 Linux 上运行
-    - 需要为每个目标平台单独编译
+
+   - 为 Windows 编译的程序无法在 Linux 上运行
+   - 需要为每个目标平台单独编译
 
 2. 不支持动态特性：
-    - 无法使用反射、动态代理等特性
-    - 不支持某些 AOP（面向切面编程）功能
+
+   - 无法使用反射、动态代理等特性
+   - 不支持某些 AOP（面向切面编程）功能
 
 3. 编译环境要求：
-    - 需要目标平台特定的编译工具链
+   - 需要目标平台特定的编译工具链
 
 ### AOT 在 Spring Boot 3 中的应用
 
@@ -1110,6 +1113,7 @@ Spring Boot 3 引入 AOT 支持，主要用于
     </plugins>
 </build>
 ```
+
 使用以上 Maven 配置，可以生成原生可执行文件。
 
 ### 结论
@@ -1205,25 +1209,133 @@ public class TrafficController {
     }
 }
 ```
+
 - 启动时开启小流量（如 10%）
 - 逐步增加流量，直到达到正常水平
 - 可以设置定时任务，每隔一段时间增加一定比例的流量
 
 ### 实施步骤
+
 1. 实现预热机制：
-    - 识别应用中的热点方法
-    - 在应用启动后，自动调用这些方法数百次
+   - 识别应用中的热点方法
+   - 在应用启动后，自动调用这些方法数百次
 2. 实现流量控制：
-    - 在负载均衡器或应用入口处实现流量控制逻辑
-    - 设置定时任务，逐步增加流量
+   - 在负载均衡器或应用入口处实现流量控制逻辑
+   - 设置定时任务，逐步增加流量
 3. 监控和调整：
-    - 监控应用性能和 JVM 指标
-    - 根据实际情况调整预热次数和流量增加策略
+   - 监控应用性能和 JVM 指标
+   - 根据实际情况调整预热次数和流量增加策略
 
 ### 注意事项
+
 - 预热过程不应影响实际业务逻辑
 - 流量控制应考虑整体系统的负载均衡
 - 持续监控应用性能，及时调整策略
+
+
+## Spring Boot 3 使用 GraalVM 实现 AOT
+
+### 准备工作
+
+#### 下载并安装 GraalVM
+
+- 访问 GraalVM 官方下载页面
+- 选择 Java 17 版本（Spring Boot 3 最低支持 Java 17）
+- 下载适合您操作系统的版本
+
+#### 配置环境变量
+
+- 设置 JAVA_HOME 指向 GraalVM 安装目录
+- 更新 PATH 变量，包含 GraalVM 的 bin 目录
+
+#### 安装 Native Image
+
+- 在线安装: gu install native-image
+- 离线安装:
+    1. 下载 Native Image 组件
+    2. 使用命令：gu install -L <path-to-native-image-jar>
+
+#### 安装 Visual Studio 2022（Windows 用户）
+
+- 下载并安装 Visual Studio 2022 社区版
+- 勾选"使用 C++ 的桌面开发"
+- 安装 MSVC 和 Windows SDK
+
+### 创建 Spring Boot 3 项目
+- 使用 Spring Initializr 或 IDE 创建项目
+- 选择 Spring Boot 3.0.0 版本
+- 添加依赖：
+    - Spring Web
+    - GraalVM Native Support
+
+### 项目配置
+
+#### 修改 pom.xml
+
+```xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.0.0</version>
+</parent>
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+        </plugin>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+```
+#### 注意事项
+
+- Maven 仓库路径不要包含中文字符
+- 确保使用的是 GraalVM Java 17 版本
+
+### AOT 编译
+
+#### 使用 x64 Native Tools Command Prompt
+
+- 打开 x64 Native Tools Command Prompt for VS 2022
+- 导航到项目目录
+
+#### 执行编译命令
+
+```bash
+mvn -Pnative native:compile
+```
+
+### 运行本地可执行文件
+
+- 编译完成后，在 target 目录下找到 .exe 文件
+- 直接运行该文件或通过命令行运行
+
+### 性能对比
+
+- 传统 Spring Boot 启动时间：约 1.5 秒
+- AOT 编译后启动时间：约 100 毫秒
+
+### 局限性
+
+- 不支持某些动态特性，如 AOP（示例中的 LogAspect 无法生效）
+- 可能与某些依赖库不兼容
+
+### 总结
+
+使用 GraalVM 和 AOT 编译可以显著提高 Spring Boot 应用的启动速度和减小部署体积。然而，它也带来了一些限制，特别是在动态特性方面。随着技术的发展，这些限制可能会在未来的版本中得到改善。
+
 
 
 
